@@ -1,0 +1,41 @@
+import numpy as np
+
+# Definimos la matriz A y el vector b
+A = np.array([[3, -0.1, -0.2],
+              [0.1, 7, -0.3],
+              [0.3, -0.2, 10]])
+
+b = np.array([7.85, -19.3, 71.4])
+
+# Valor inicial para las variables
+x = np.zeros(len(b))
+
+# Definir el número de iteraciones y la tolerancia
+tolerancia = 1e-10
+max_iter = 100
+
+def gauss_seidel(A, b, x):
+    n = len(b)
+    for it in range(max_iter):
+        x_new = np.copy(x)
+        
+        for i in range(n):
+            sum1 = np.dot(A[i, :i], x_new[:i])
+            sum2 = np.dot(A[i, i+1:], x[i+1:])
+            x_new[i] = (b[i] - sum1 - sum2) / A[i, i]
+        
+        # Revisar si la solución ha convergido
+        if np.linalg.norm(x_new - x, ord=np.inf) < tolerancia:
+            print(f'Convergencia alcanzada en {it+1} iteraciones.')
+            return x_new
+        
+        x = x_new
+    
+    print('Número máximo de iteraciones alcanzado.')
+    return x
+
+# Ejecutamos el método de Gauss-Seidel
+solucion = gauss_seidel(A, b, x)
+
+# Mostrar la solución
+print("La solución es:", solucion)
